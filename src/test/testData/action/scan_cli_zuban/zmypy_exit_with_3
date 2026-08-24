@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$1" = "-V" ]; then
+  echo "zuban 0.9.0"
+else
+  exit 3
+fi

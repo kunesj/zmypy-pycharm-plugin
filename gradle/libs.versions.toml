@@ -2,7 +2,6 @@
 # libraries
 junit = "4.13.2"
 mockk = "1.14.4"
-myPluginCommon = "latest"
 
 # plugins
 changelog = "2.5.0"
@@ -13,7 +12,6 @@ serialization = "2.2.0"
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk-jvm", version.ref = "mockk" }
-myPluginCommon = { group = "works.szabope.plugins", name = "common", version.ref = "myPluginCommon" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

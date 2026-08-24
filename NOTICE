@@ -1,2 +1,6 @@
-Mypy PyCharm Plugin
+ZMypy PyCharm Plugin (zmypy-pycharm-plugin)
+Copyright 2026, Jiří Kuneš
+
+A fork of:
+Mypy PyCharm Plugin (mypy-pycharm-plugin)
 Copyright 2024, Peter Szabo

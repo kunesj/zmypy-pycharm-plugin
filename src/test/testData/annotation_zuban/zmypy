@@ -1,0 +1,23 @@
+#!/bin/bash
+if [ "$1" = "-V" ]; then
+  echo "zuban 0.9.0"
+else
+  for last; do :; done
+  # log every scan invocation so the test can count them
+  echo "$*" >> /tmp/zmypy_annotation_calls.txt
+  # zuban real-time must never use a temp/shadow file
+  case "$last" in
+    *pycharm_mypy_*) >&2 echo "TEMP FILE USED: $last"; exit 2 ;;
+  esac
+  expected_args="--show-column-numbers $last"
+  if [ "$*" != "$expected_args" ]; then
+    >&2 echo "expected: $expected_args"
+    >&2 echo "received: $*"
+    exit 2
+  fi
+  # print the issue with a CWD-relative path, like real zmypy does
+  rel=$(realpath -m --relative-to="$PWD" "$last")
+  echo "$rel:1:1: error: A test error  [test-code]"
+  echo "Found 1 error in 1 file (checked 1 source file)"
+  exit 1
+fi

@@ -1,0 +1,57 @@
+<idea-plugin>
+    <resource-bundle>messages.ZMypyBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="ZMypy " factoryClass="works.kunesj.plugins.zmypy.toolWindow.MypyToolWindowFactory"
+                    anchor="bottom" canCloseContents="false" icon="/icons/mypyToolWindow.svg"/>
+        <projectConfigurable
+                id="works.kunesj.plugins.zmypy.configurable.MypyConfigurable"
+                instance="works.kunesj.plugins.zmypy.configurable.MypyConfigurable"
+                parentId="tools"
+                key="mypy.configuration.name"
+                bundle="messages.ZMypyBundle"/>
+        <externalAnnotator language="Python" implementationClass="works.kunesj.plugins.zmypy.annotator.MypyAnnotator"/>
+        <localInspection language="Python" level="ERROR" shortName="ZMypyInspection"
+                         implementationClass="works.kunesj.plugins.zmypy.annotator.MypyInspection"
+                         groupBundle="messages.ZMypyBundle" groupKey="mypy.inspection.group_name"
+                         bundle="messages.ZMypyBundle" key="mypy.inspection.name" enabledByDefault="true"/>
+        <postStartupActivity implementation="works.kunesj.plugins.zmypy.activity.SettingsInitializationActivity"/>
+        <projectActivity implementation="works.kunesj.plugins.zmypy.activity.DocumentSavedActivity"/>
+        <notificationGroup displayType="STICKY_BALLOON" id="ZMypy group" toolWindowId="MyPy" bundle="messages.ZMypyBundle"
+                           key="notification.group.mypy.group"/>
+    </extensions>
+
+    <actions>
+        <group id="works.kunesj.plugins.zmypy.MypyPluginActions" popup="true">
+            <action id="works.kunesj.plugins.zmypy.action.RescanAction"
+                    class="works.kunesj.plugins.zmypy.action.RescanAction"
+                    icon="AllIcons.Actions.Refresh"/>
+            <action id="works.kunesj.plugins.zmypy.action.StopScanAction"
+                    class="works.kunesj.plugins.zmypy.action.StopScanAction"
+                    icon="AllIcons.Actions.Suspend"/>
+            <action id="works.kunesj.plugins.zmypy.action.ScanCurrentlyFocusedOneInEditorAction"
+                    class="works.kunesj.plugins.zmypy.action.ScanCurrentlyFocusedOneInEditorAction"
+                    icon="AllIcons.Actions.Execute"/>
+            <separator/>
+            <action id="works.kunesj.plugins.zmypy.action.ScrollToSourceAction"
+                    class="works.kunesj.plugins.common.action.ScrollToSourceDummyAction"
+                    icon="AllIcons.General.AutoscrollToSource"/>
+            <separator/>
+            <reference ref="ExpandAll"/>
+            <reference ref="CollapseAll"/>
+            <action id="works.kunesj.plugins.zmypy.action.OpenSettingsAction"
+                    class="works.kunesj.plugins.zmypy.action.OpenSettingsAction"
+                    icon="AllIcons.General.GearPlain"/>
+        </group>
+        <action id="works.kunesj.plugins.zmypy.action.ScanAction"
+                class="works.kunesj.plugins.zmypy.action.ScanAction"
+                icon="/icons/mypyScanAction.svg">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+        </action>
+        <action id="works.kunesj.plugins.zmypy.action.InstallMypyAction"
+                class="works.kunesj.plugins.zmypy.action.InstallMypyAction"/>
+    </actions>
+</idea-plugin>

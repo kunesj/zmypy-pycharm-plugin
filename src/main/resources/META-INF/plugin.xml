@@ -1,9 +1,9 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>works.szabope.mypy</id>
-    <name>Mypy</name>
-    <vendor url="https://github.com/szabope">Peter Szabo</vendor>
+    <id>works.kunesj.zmypy</id>
+    <name>ZMypy</name>
+    <vendor url="https://github.com/kunesj">Jiří Kuneš</vendor>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    <depends optional="true" config-file="works.szabope.mypy-PythonCore.xml">com.intellij.modules.python</depends>
+    <depends optional="true" config-file="works.kunesj.zmypy-PythonCore.xml">com.intellij.modules.python</depends>
 </idea-plugin>

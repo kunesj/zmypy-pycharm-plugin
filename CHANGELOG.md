@@ -1,6 +1,15 @@
-# Mypy Pycharm Plugin Changelog
+# ZMypy PyCharm Plugin Changelog
 
 ## [Unreleased]
+
+## [2.3.0] - 2026-08-24
+
+- Forked from [szabope/mypy-pycharm-plugin](https://github.com/szabope/mypy-pycharm-plugin) and renamed to **ZMypy**: new plugin id `works.kunesj.zmypy`, new package `works.kunesj.plugins.zmypy`, the shared base library inlined into this repository. Not published on the JetBrains Marketplace — install from disk.
+- Add [zuban](https://zubanls.com) (zmypy) as a selectable type checker alongside mypy. zuban requires `zuban >= 0.9`. Real-time annotations in zuban mode run on save, because zmypy cannot analyze unsaved content; manual scans always see saved content. (This feature was added with AI assistance, Qwen3.8-27B — use at your own risk.)
+
+The entries below are the upstream changelog of the original plugin.
+
+## [2.2.4] - 2026-07-23
 
 ## [2.2.4] - 2026-07-23
 

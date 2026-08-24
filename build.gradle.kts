@@ -1,3 +1,4 @@
+import java.nio.file.Path
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
@@ -12,6 +13,11 @@ plugins {
 
 group = providers.gradleProperty("pluginGroup").get()
 version = providers.gradleProperty("pluginVersion").get()
+
+// Optional locally installed IDE to build/test against instead of downloading the platform,
+// e.g. ./gradlew build -PlocalPlatformPath=/home/jirka642/bin/pycharm
+val localPlatformDir: Path? = (findProperty("localPlatformPath") as String?)?.takeIf { it.isNotBlank() }
+    ?.let { p -> Path.of(p).let { if (it.isAbsolute) it else project.projectDir.toPath().resolve(it) } }
 
 // Set the JVM language level used to build the project.
 kotlin {
@@ -35,12 +41,16 @@ dependencies {
         exclude(group = "org.jetbrains.kotlin")
         exclude(group = "org.jetbrains.kotlinx")
     }
-    testImplementation(testFixtures(libs.myPluginCommon))
-
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
-        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion")) {
-            useInstaller.set(true)
+        // Optional: build against a locally installed IDE instead of downloading it,
+        // e.g. ./gradlew build -PlocalPlatformPath=/home/jirka642/bin/pycharm
+        if (localPlatformDir == null) {
+            create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion")) {
+                useInstaller.set(true)
+            }
+        } else {
+            local(localPlatformDir)
         }
 
         // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
@@ -56,7 +66,6 @@ dependencies {
         zipSigner()
         testFramework(TestFrameworkType.Platform)
     }
-    implementation(libs.myPluginCommon)
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html

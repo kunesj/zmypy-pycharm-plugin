@@ -1,0 +1,81 @@
+package works.kunesj.plugins.common.run
+
+import com.intellij.execution.process.OSProcessHandler
+import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessListener
+import com.intellij.execution.process.ProcessOutputTypes
+import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.project.Project
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.channelFlow
+import works.kunesj.plugins.common.services.ToolExecutorConfiguration
+
+data class ProcessLine(val text: String, val isError: Boolean)
+class ToolExecutionTerminatedException(val exitCode: Int) : Exception()
+
+abstract class ToolExecutor(private val project: Project, private val moduleToRun: String) {
+    @Volatile var exitCode: Int? = null
+        private set
+    @Volatile var commandLine: String? = null
+        private set
+
+    fun execute(
+        configuration: ToolExecutorConfiguration, parameters: List<String> = emptyList()
+    ): Flow<ProcessLine> = channelFlow {
+        val handler = createProcessHandler(configuration, parameters)
+        commandLine = handler.commandLine
+
+        val listener = object : ProcessListener {
+            override fun onTextAvailable(event: ProcessEvent, outputType: com.intellij.openapi.util.Key<*>) {
+                thisLogger().debug("ToolExecutor.ProcessListener#onTextAvailable received event of type $outputType")
+                when (outputType) {
+                    ProcessOutputTypes.STDOUT -> {
+                        trySend(ProcessLine(event.text, false))
+                    }
+
+                    ProcessOutputTypes.STDERR -> {
+                        trySend(ProcessLine(event.text, true))
+                    }
+
+                    else -> {}
+                }
+            }
+
+            override fun processTerminated(event: ProcessEvent) {
+                exitCode = event.exitCode
+                if (isError(event)) {
+                    close(ToolExecutionTerminatedException(event.exitCode))
+                } else {
+                    close() // signal flow completion
+                }
+            }
+        }
+
+        handler.addProcessListener(listener)
+        handler.startNotify()
+        // ensure process is cleaned up when cancelled
+        awaitClose {
+            if (handler.isProcessTerminating || handler.isProcessTerminated) return@awaitClose
+            handler.destroyProcess()
+        }
+    }.buffer(Channel.UNLIMITED)
+
+    protected open fun isError(event: ProcessEvent): Boolean {
+        return event.exitCode > 0
+    }
+
+    protected open fun createProcessHandler(
+        configuration: ToolExecutorConfiguration,
+        parameters: List<String>
+    ): OSProcessHandler = if (configuration.useProjectSdk) {
+        pythonModuleProcessHandler(
+            project, moduleToRun, parameters,
+            workingDir = configuration.workingDirectory
+        )
+    } else {
+        commandLineProcessHandler(configuration.executablePath, configuration.workingDirectory, parameters)
+    }
+}

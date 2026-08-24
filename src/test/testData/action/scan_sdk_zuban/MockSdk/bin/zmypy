@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ "$1" = "-V" ]; then
+  echo "zuban 0.9.0"
+else
+  for last; do :; done
+  expected_args="--show-column-numbers --exclude excluded_dir $last"
+  if [ "$*" != "$expected_args" ]; then
+    >&2 echo "expected: $expected_args"
+    >&2 echo "received: $*"
+    exit 2 # because 1 needs to be treated as being fine
+  fi
+  echo 'a.py:1:10: error: Bracketed expression "[...]" is not valid as a type  [valid-type]'
+  echo 'Found 1 error in 1 file (checked 1 source file)'
+  exit 1
+fi

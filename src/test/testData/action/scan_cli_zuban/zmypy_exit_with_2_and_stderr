@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ "$1" = "-V" ]; then
+  echo "zuban 0.9.0"
+else
+  echo 'error: unexpected argument "--foo" found' >&2
+  echo 'tip: to pass "--foo" as a value, use "-- --foo"' >&2
+  exit 2
+fi

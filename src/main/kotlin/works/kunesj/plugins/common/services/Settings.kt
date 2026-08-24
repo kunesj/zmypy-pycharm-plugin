@@ -1,0 +1,16 @@
+package works.kunesj.plugins.common.services
+
+interface Settings : SettingsData {
+    var isAutoScrollToSource: Boolean
+    override var scanBeforeCheckIn: Boolean
+    override var excludeNonProjectFiles: Boolean
+    override var workingDirectory: String?
+    override var useProjectSdk: Boolean
+    override var arguments: String
+    override var configFilePath: String
+    override var executablePath: String
+
+    fun isToolApplicable(): Boolean
+    suspend fun initSettings(oldSettings: BasicSettingsData)
+    suspend fun getValidConfiguration(): Result<ToolExecutorConfiguration>
+}
