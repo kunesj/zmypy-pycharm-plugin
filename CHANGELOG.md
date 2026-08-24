@@ -7,10 +7,6 @@
 - Forked from [szabope/mypy-pycharm-plugin](https://github.com/szabope/mypy-pycharm-plugin) and renamed to **ZMypy**: new plugin id `works.kunesj.zmypy`, new package `works.kunesj.plugins.zmypy`, the shared base library inlined into this repository. Not published on the JetBrains Marketplace — install from disk.
 - Add [zuban](https://zubanls.com) (zmypy) as a selectable type checker alongside mypy. zuban requires `zuban >= 0.9`. Real-time annotations in zuban mode run on save, because zmypy cannot analyze unsaved content; manual scans always see saved content. (This feature was added with AI assistance, Qwen3.8-27B — use at your own risk.)
 
-The entries below are the upstream changelog of the original plugin.
-
-## [2.2.4] - 2026-07-23
-
 ## [2.2.4] - 2026-07-23
 
 - Changelog update - `v2.2.3` by @github-actions[bot] in https://github.com/szabope/mypy-pycharm-plugin/pull/170
@@ -284,47 +280,48 @@ Fix Naming collisions with old plugin
      - Severity filters: **removed**
      - Rescan: **added** - runs mypy scan on the latest target(s)
 
-[Unreleased]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.2.4...HEAD
-[2.2.4]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.2.3...v2.2.4
-[2.2.3]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.2.2...v2.2.3
-[2.2.2]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.2.1...v2.2.2
-[2.2.1]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.2.0...v2.2.1
-[2.2.0]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.8...v2.2.0
-[2.1.8]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.7...v2.1.8
-[2.1.7]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.6...v2.1.7
-[2.1.6]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.5...v2.1.6
-[2.1.5]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.4...v2.1.5
-[2.1.4]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.3...v2.1.4
-[2.1.3]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.2...v2.1.3
-[2.1.2]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.1...v2.1.2
-[2.1.1]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.1.0...v2.1.1
-[2.1.0]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.0.1...v2.1.0
-[2.0.1]: https://github.com/szabope/mypy-pycharm-plugin/compare/v2.0.0...v2.0.1
-[2.0.0]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.26...v2.0.0
-[1.0.26]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.25...v1.0.26
-[1.0.25]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.24...v1.0.25
-[1.0.24]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.23...v1.0.24
-[1.0.23]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.22...v1.0.23
-[1.0.22]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.21...v1.0.22
-[1.0.21]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.20...v1.0.21
-[1.0.20]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.19...v1.0.20
-[1.0.19]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.18...v1.0.19
-[1.0.18]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.17...v1.0.18
-[1.0.17]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.16...v1.0.17
-[1.0.16]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.15...v1.0.16
-[1.0.15]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.14...v1.0.15
-[1.0.14]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.13...v1.0.14
-[1.0.13]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.12...v1.0.13
-[1.0.12]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.11...v1.0.12
-[1.0.11]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.10...v1.0.11
-[1.0.10]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.9...v1.0.10
-[1.0.9]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.8...v1.0.9
-[1.0.8]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.7...v1.0.8
-[1.0.7]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.6...v1.0.7
-[1.0.6]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.5...v1.0.6
-[1.0.5]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.4...v1.0.5
-[1.0.4]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.3...v1.0.4
-[1.0.3]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.2...v1.0.3
-[1.0.2]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/szabope/mypy-pycharm-plugin/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/szabope/mypy-pycharm-plugin/commits/v1.0.0
+[Unreleased]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.4...v2.3.0
+[2.2.4]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.3...v2.2.4
+[2.2.3]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.2...v2.2.3
+[2.2.2]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.1...v2.2.2
+[2.2.1]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.0...v2.2.1
+[2.2.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.8...v2.2.0
+[2.1.8]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.7...v2.1.8
+[2.1.7]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.6...v2.1.7
+[2.1.6]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.5...v2.1.6
+[2.1.5]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.4...v2.1.5
+[2.1.4]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.3...v2.1.4
+[2.1.3]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.2...v2.1.3
+[2.1.2]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.1...v2.1.2
+[2.1.1]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.0.1...v2.1.0
+[2.0.1]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.26...v2.0.0
+[1.0.26]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.25...v1.0.26
+[1.0.25]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.24...v1.0.25
+[1.0.24]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.23...v1.0.24
+[1.0.23]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.22...v1.0.23
+[1.0.22]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.21...v1.0.22
+[1.0.21]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.20...v1.0.21
+[1.0.20]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.19...v1.0.20
+[1.0.19]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.18...v1.0.19
+[1.0.18]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.17...v1.0.18
+[1.0.17]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.16...v1.0.17
+[1.0.16]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.15...v1.0.16
+[1.0.15]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.14...v1.0.15
+[1.0.14]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.13...v1.0.14
+[1.0.13]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.12...v1.0.13
+[1.0.12]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.11...v1.0.12
+[1.0.11]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.10...v1.0.11
+[1.0.10]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.9...v1.0.10
+[1.0.9]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/kunesj/zmypy-pycharm-plugin/commits/v1.0.0
