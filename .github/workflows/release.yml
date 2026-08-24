@@ -58,8 +58,8 @@ jobs:
 
           ./gradlew patchChangelog --release-note-file=$RELEASE_NOTE
 
-      # Publish the plugin to JetBrains Marketplace
-      - name: Publish Plugin
+      # Build and optionally publish the plugin to JetBrains Marketplace
+      - name: Build and Publish Plugin
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
@@ -67,11 +67,11 @@ jobs:
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
           GPR_USERNAME: ${{secrets.GPR_USERNAME}}
           GPR_TOKEN: ${{secrets.GPR_TOKEN}}
-        # secrets cannot be referenced in `if:` conditions, so the check happens here;
         # without a token the plugin is distributed as a release asset only (install from disk)
         run: |
           if [ -z "$PUBLISH_TOKEN" ]; then
             echo "PUBLISH_TOKEN not set - skipping JetBrains Marketplace publish"
+            ./gradlew buildPlugin
           else
             ./gradlew publishPlugin
           fi
