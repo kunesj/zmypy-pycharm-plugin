@@ -44,8 +44,14 @@ Besides [mypy](https://github.com/python/mypy), the plugin can use [zuban](https
   `pyproject.toml` are all honored.
 
 **Limitations of zuban mode** (because `zmypy` lacks mypy's `--shadow-file` and `--output json`):
-- Real-time underlines refresh **on save**, not on every edit. While you type (unsaved changes)
-  the last saved-state result is shown.
+- Real-time annotations of unsaved content work by mirroring the working directory into a
+  temporary directory (clean files as links, unsaved files as copies of their in-memory
+  content) and running zmypy there. Consequences:
+  - Files **outside the working directory** (e.g. in multi-root projects) are not
+    annotated in real time.
+  - A dirty file that is imported only through a `mypy_path` entry (not located under the
+    working directory) is seen by zmypy with its saved content.
+  - On Windows without developer mode the mirror falls back to copying files.
 - Manual scans always see the **saved** content (they save all documents first).
 - mypy-only CLI flags placed in the custom *Arguments* field produce a visible usage-error
   balloon (zmypy exits with code 2), rather than being silently ignored.

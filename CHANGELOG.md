@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-08-25
+
+- Rework real-time annotations in zuban mode: instead of "check on save" (stale underlines that only refreshed on save), the working directory is now mirrored into a temporary directory — clean files as links, unsaved files as copies of their in-memory content — and zmypy runs inside the mirror. Underlines now reflect the current (unsaved) content as you type. Files outside the working directory are not annotated in zuban mode.
+
 ## [2.3.0] - 2026-08-24
 
 - Forked from [szabope/mypy-pycharm-plugin](https://github.com/szabope/mypy-pycharm-plugin) and renamed to **ZMypy**: new plugin id `works.kunesj.zmypy`, new package `works.kunesj.plugins.zmypy`, the shared base library inlined into this repository. Not published on the JetBrains Marketplace — install from disk.
@@ -280,7 +284,8 @@ Fix Naming collisions with old plugin
      - Severity filters: **removed**
      - Rescan: **added** - runs mypy scan on the latest target(s)
 
-[Unreleased]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.4...v2.3.0
 [2.2.4]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.3...v2.2.4
 [2.2.3]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.2...v2.2.3

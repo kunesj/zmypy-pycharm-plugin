@@ -16,7 +16,6 @@
                          groupBundle="messages.ZMypyBundle" groupKey="mypy.inspection.group_name"
                          bundle="messages.ZMypyBundle" key="mypy.inspection.name" enabledByDefault="true"/>
         <postStartupActivity implementation="works.kunesj.plugins.zmypy.activity.SettingsInitializationActivity"/>
-        <projectActivity implementation="works.kunesj.plugins.zmypy.activity.DocumentSavedActivity"/>
         <notificationGroup displayType="STICKY_BALLOON" id="ZMypy group" toolWindowId="MyPy" bundle="messages.ZMypyBundle"
                            key="notification.group.mypy.group"/>
     </extensions>

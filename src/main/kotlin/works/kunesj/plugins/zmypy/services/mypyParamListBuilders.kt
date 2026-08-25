@@ -32,19 +32,25 @@ fun buildMypyParamList(
     configuration: ToolExecutorConfiguration,
     targets: Collection<VirtualFile>,
     extraArgs: Collection<String> = emptyList(),
-    tool: MypyTool
+    tool: MypyTool,
+    targetPath: (VirtualFile) -> String = { requireNotNull(it.canonicalPath) }
 ) = with(configuration) {
     val params = tool.mandatoryArgs.toMutableList()
     configFilePath.nullize(true)?.let { params.add("--config-file"); params.add(it) }
     arguments.nullize(true)?.let { params.addAll(ParametersListUtil.parse(it)) }
     if (excludeNonProjectFiles) {
-        Exclusions(project).findAll(targets).mapNotNull { getRelativePathFromContentRoot(it, project)?.toCanonicalPath() }
+        excludedRelativePaths(targets).map { it.toCanonicalPath() }
             .forEach { params.add("--exclude"); params.add(it) }
     }
     params.addAll(extraArgs)
-    params.addAll(targets.map { requireNotNull(it.canonicalPath) })
+    params.addAll(targets.map { targetPath(it) })
     params
 }
+
+// mypy's `--exclude` doesn't work with absolute paths; relative to the content root
+context(project: Project)
+fun excludedRelativePaths(targets: Collection<VirtualFile>): List<Path> =
+    Exclusions(project).findAll(targets).mapNotNull { getRelativePathFromContentRoot(it, project) }
 
 // mypy's `--exclude` doesn't work with absolute paths
 private fun getRelativePathFromContentRoot(excludeUrlEntity: ExcludeUrlEntity, project: Project): Path? {
