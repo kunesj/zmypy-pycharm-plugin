@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-08-25
+
+- Speed up real-time (mirror) annotation: clean subtrees are now single live directory links, so the per-edit reconcile cost is proportional to the open files instead of the repository size (1.4–4.8 s per edit on a project with a 12k-file venv → milliseconds).
+- Fix third-party imports in real-time (mirror) mode: pass `--python-executable` with the project/SDK venv, since zmypy's own venv discovery does not work inside the mirror.
+- Add timing logs to the IDE log for diagnosing slow annotation.
+
 ## [2.4.0] - 2026-08-25
 
 - Rework real-time annotations in zuban mode: instead of "check on save" (stale underlines that only refreshed on save), the working directory is now mirrored into a temporary directory — clean files as links, unsaved files as copies of their in-memory content — and zmypy runs inside the mirror. Underlines now reflect the current (unsaved) content as you type. Files outside the working directory are not annotated in zuban mode.
@@ -284,7 +290,8 @@ Fix Naming collisions with old plugin
      - Severity filters: **removed**
      - Rescan: **added** - runs mypy scan on the latest target(s)
 
-[Unreleased]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.4...v2.3.0
 [2.2.4]: https://github.com/kunesj/zmypy-pycharm-plugin/compare/v2.2.3...v2.2.4

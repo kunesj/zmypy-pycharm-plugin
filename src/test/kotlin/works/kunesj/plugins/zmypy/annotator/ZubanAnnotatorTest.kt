@@ -93,6 +93,45 @@ class ZubanAnnotatorTest : AbstractToolWindowTestCase() {
         assertEquals(3, Files.readAllLines(workDir.resolve("bad.py")).size)
     }
 
+    fun `test clean subdirectories are dir links and get materialized on edit`() {
+        Files.createDirectories(workDir.resolve("pkg"))
+        Files.copy(Paths.get(testDataPath).resolve("pkg/mod.py"), workDir.resolve("pkg/mod.py"))
+        Files.copy(Paths.get(testDataPath).resolve("main.py"), workDir.resolve("main.py"))
+        openLocalFile("main.py")
+        setUpZubanSettings()
+        myFixture.doHighlighting()
+        val mirrorRoot1 = Paths.get(lastCall().first())
+        // clean package subdirectory = one live directory link
+        assertTrue(Files.isSymbolicLink(mirrorRoot1.resolve("pkg")))
+        assertTrue(Files.isDirectory(mirrorRoot1.resolve("pkg")))
+        // now edit a file inside the linked package
+        openLocalFile("pkg/mod.py")
+        myFixture.type("W2 = 1  # E_MARKER2\n")
+        currentFile().refresh(true, true)
+        myFixture.doHighlighting()
+        val (cwd2, _, markerLine2, lineCount2, kind2) = lastCall()
+        val mirrorRoot2 = Paths.get(cwd2)
+        // the package was materialized: a real dir with the edited file as a content copy
+        assertTrue(!Files.isSymbolicLink(mirrorRoot2.resolve("pkg")))
+        assertTrue(Files.isDirectory(mirrorRoot2.resolve("pkg")))
+        assertEquals("1", markerLine2)
+        assertEquals("2", lineCount2)
+        assertEquals("REGULAR", kind2)
+        assertEquals(myFixture.editor.document.text, Files.readString(mirrorRoot2.resolve("pkg/mod.py")))
+    }
+
+    fun `test the venv python is passed as python-executable`() {
+        openLocalFile("bad.py")
+        // a venv next to the project: the mirror must pass its python to zmypy
+        Files.createDirectories(workDir.resolve(".venv/bin"))
+        Files.writeString(workDir.resolve(".venv/pyvenv.cfg"), "home = /usr/bin\n")
+        Files.writeString(workDir.resolve(".venv/bin/python"), "#!/bin/sh\n")
+        setUpZubanSettings()
+        myFixture.doHighlighting()
+        val parts = lastCall()
+        assertEquals(workDir.resolve(".venv/bin/python").toString(), parts[5])
+    }
+
     fun `test a file outside the working directory is not scanned`() {
         openLocalFile("bad.py")
         setUpZubanSettings()

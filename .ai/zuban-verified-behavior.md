@@ -241,3 +241,19 @@ directories + per-file symlinks** (or hard links) into it, CWD = the mirror root
 - **Windows caveat (not testable here, by design)**: `Files.createSymbolicLink` requires
   developer mode/admin; the plugin falls back to a hard link when both paths share a volume
   and to a plain copy otherwise.
+- **Directory symlinks work too** (verified 2026-08-25, for the v2.4.0 perf rework): a
+  mirror whose subtree is a single directory symlink (`mirror/src -> real/src`) checks
+  identically — targets reached *through* the link print CWD-relative paths (no realpath
+  expansion), imports resolve through it, a dir passed as a target is traversed, and a
+  mix of a real (dirty) file + a symlinked sibling directory in the same parent works.
+  This is what lets `ZubanMirror` represent clean subtrees as one live dir link.
+- **Venv discovery does NOT work in the mirror (verified 2026-08-25, with `ZUBAN_LOG=debug`):**
+  on the real FS zuban finds the project venv by walking up from the target and reading
+  `<ancestor>/.venv/pyvenv.cfg` ("Found venv in ..."), which adds the venv's site-packages
+  to the search path. Inside a mirror (CWD = temp dir) that walk finds nothing — even with
+  the venv linked into the mirror root — falls back to `$VIRTUAL_ENV` (if set) and finally
+  to the **system Python** → every third-party import becomes a false
+  `import-not-found`. **Fix used by the plugin:** pass `--python-executable <venv python>`
+  on mirror runs (verified: `Success` again on a litestar-importing file). The plugin
+  resolves it from the SDK (SDK mode) or by walking up from the target / the executable's
+  own dir looking for a `pyvenv.cfg` (`.venv`, `venv`, `.env`, `env`).

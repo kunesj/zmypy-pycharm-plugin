@@ -7,13 +7,20 @@ and can't do — verified), `codebase-map.md` (current file/line map).
 > **ADDENDUM 2026-08-25 (v2.4.0):** the §2.7 "check on save" real-time design (dirty-guard
 > + `ScanResultCache` + `DocumentSavedActivity` → daemon restart) was shipped in 2.3.0 and
 > then **removed** — underlines stayed stale while typing and could shift to wrong lines.
-> It was replaced by a **temp-dir mirror**: `ZubanMirror` mirrors the working directory
-> (clean files as symlink→hard-link→copy, dirty files as in-memory copies), zmypy runs
-> with CWD = the mirror root, and its CWD-relative output maps 1:1 back to the real files.
-> Files outside the working directory are not annotated in zuban mode. §2.8 (text parser),
-> §2.9 (async scan, which stays on the real FS because manual scans save all documents
-> first) and everything else of the plan is unchanged. Verified binary facts are in the
-> "Mirror mode" section of `zuban-verified-behavior.md`.
+> It was replaced by a **temp-dir mirror**: `ZubanMirror` mirrors the working directory,
+> zmypy runs with CWD = the mirror root, and its CWD-relative output maps 1:1 back to the
+> real files. Files outside the working directory are not annotated in zuban mode. §2.8
+> (text parser), §2.9 (async scan, which stays on the real FS because manual scans save all
+> documents first) and everything else of the plan is unchanged. Verified binary facts are
+> in the "Mirror mode" section of `zuban-verified-behavior.md`.
+>
+> **Perf rework (same day):** a full per-file mirror walk took 1.3–4.8 s per edit on a
+> project whose working dir contains a 12k-file venv. `ZubanMirror` now represents clean
+> subtrees as **live directory symlinks** and materializes real dirs only along paths to
+> files that are open-in-editor and modified (the only possible dirty files), compacting
+> them back to dir links when clean. Per-scan cost drops from O(repo) to O(open files);
+> a per-file walk remains as the fallback when dir symlinks are unavailable (Windows w/o
+> developer mode). See decision #2 in `README.md`.
 
 ## Completion notes (2026-08-24) — READ FIRST
 

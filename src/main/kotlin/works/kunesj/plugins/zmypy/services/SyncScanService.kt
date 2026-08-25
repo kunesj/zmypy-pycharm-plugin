@@ -97,14 +97,19 @@ class SyncScanService(private val project: Project, private val cs: CoroutineSco
         val inScope = targets.filter { it.canonicalPath?.let { p -> Path(p).normalize().startsWith(workDir) } == true }
         if (inScope.isEmpty()) return emptyMap()
         val mirror = ZubanMirror.getInstance(project)
-        val excluded = if (configuration.excludeNonProjectFiles) with(project) { excludedRelativePaths(inScope) } else emptyList()
-        mirror.reconcile(workDir, excluded)
+        val mirrorStartedAt = System.nanoTime()
+        // no exclusions: live dir links must mirror what the checker can import (== the real FS)
+        mirror.reconcile(workDir)
+        val processStartedAt = System.nanoTime()
         val mirrorRoot = mirror.root()
         val mirrorConfiguration = configuration.copy(workingDirectory = mirrorRoot.toString())
         val parameters = with(project) {
             buildMypyParamList(
                 configuration = mirrorConfiguration,
                 targets = inScope,
+                extraArgs = mirrorPythonExecutable(
+                    MypySettings.getInstance(project), Path(requireNotNull(inScope.first().canonicalPath))
+                )?.let { listOf("--python-executable", it) } ?: emptyList(),
                 tool = MypyTool.ZUBAN,
                 targetPath = { it.canonicalPath?.let { p -> mirrorRoot.resolve(workDir.relativize(Path(p).normalize()))?.toString() } ?: "" }
             )
@@ -140,8 +145,18 @@ class SyncScanService(private val project: Project, private val cs: CoroutineSco
                     thisLogger().warn("zmypy wrote to stderr: $stdErr")
                 }
             }.catch(handleScanException(project, { executor.commandLine }, stdErr, MypyIncompleteConfigurationNotifier.getInstance(project), silent = true))
-        return runBlockingFlow(flow)
+        val result = runBlockingFlow(flow)
+        val finishedAt = System.nanoTime()
+        thisLogger().info(
+            "ZMypy real-time scan of ${inScope.size} file(s) in ${ms(finishedAt - mirrorStartedAt)}ms: " +
+                "mirror=${ms(processStartedAt - mirrorStartedAt)}ms, " +
+                "zmypy+parse=${ms(finishedAt - processStartedAt)}ms, " +
+                "issues=${result.values.sumOf { it.size }}"
+        )
+        return result
     }
+
+    private fun ms(nanos: Long): Long = nanos / 1_000_000
 
     private fun runBlockingFlow(flow: Flow<Pair<VirtualFile, MypyMessage>>): Map<VirtualFile, List<MypyMessage>> =
         cs.future {

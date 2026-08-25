@@ -9,8 +9,23 @@ else
     "$PWD"/*) : ;;
     *) >&2 echo "target $last is outside the CWD $PWD"; exit 2 ;;
   esac
+  # strip the optional --python-executable <path> pair, remembering its value
+  pyexec=""
+  args=("$@")
+  filtered=""
+  i=0
+  while [ "$i" -lt "${#args[@]}" ]; do
+    if [ "${args[$i]}" = "--python-executable" ]; then
+      pyexec="${args[$((i + 1))]}"
+      i=$((i + 2))
+      continue
+    fi
+    filtered="$filtered ${args[$i]}"
+    i=$((i + 1))
+  done
+  filtered="${filtered# }"
   expected_args="--show-column-numbers $last"
-  if [ "$*" != "$expected_args" ]; then
+  if [ "$filtered" != "$expected_args" ]; then
     >&2 echo "expected: $expected_args"
     >&2 echo "received: $*"
     exit 2
@@ -20,7 +35,7 @@ else
   marker=$(grep -n 'E_MARKER' "$last" | head -1 | cut -d: -f1)
   lines=$(awk 'END { print NR }' "$last")
   if [ -L "$last" ]; then kind=SYMLINK; else kind=REGULAR; fi
-  printf '%s|%s|%s|%s|%s\n' "$PWD" "$*" "${marker:-0}" "$lines" "$kind" >> "$CALLS_FILE"
+  printf '%s|%s|%s|%s|%s|%s\n' "$PWD" "$*" "${marker:-0}" "$lines" "$kind" "$pyexec" >> "$CALLS_FILE"
   rel=$(realpath -m --relative-to="$PWD" "$last")
   if [ -n "$marker" ]; then
     echo "$rel:$marker:1: error: A test error  [test-code]"

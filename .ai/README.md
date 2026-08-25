@@ -43,17 +43,28 @@ supports **zuban** (Rust mypy-compatible type checker; mypy-mode executable: `zm
 2. **Real-time editor annotations for zuban: temp-dir mirror** (supersedes the originally
    shipped "check on save" design, removed 2026-08-25 — stale/shifted underlines). Because
    zmypy does NOT support `--shadow-file`, the sync (real-time) flow:
-   - mirrors the working directory into a per-project temp dir (`ZubanMirror`): clean files
-     as links (symlink → hard link on same volume → copy fallback), dirty (unsaved) files
-     as real copies of the in-memory document text;
+   - mirrors the working directory into a per-project temp dir (`ZubanMirror`):
+     **clean directories as live dir symlinks** (one link = whole subtree, auto-updating),
+     per-file links (symlink → hard link on same volume → copy fallback) only inside
+     materialized dirs, dirty (unsaved) files as real copies of the in-memory document
+     text; a dir is materialized (real mirror dir) only while a file in it is unsaved,
+     then compacted back to a dir link;
+   - dirty candidates = files **open in an editor** and modified — that bounds the
+     per-scan work to O(open files), not O(repo size) (perf fix 2026-08-25, was a full
+     per-file walk: 1.3–4.8 s on a project with a 12k-file venv);
    - runs zmypy with **CWD = the mirror root** and mirrored target paths — zmypy's
      CWD-relative output maps 1:1 back to the real files;
    - files **outside** the working directory are not annotated in zuban mode (user
      decision: zmypy should not run on files outside the repo). Manual (tool-window) scans
-     keep the real-FS flow (they `saveAllDocuments()` first).
+     keep the real-FS flow (they `saveAllDocuments()` first);
+   - Windows without developer mode (no dir symlinks): whole mirror falls back to the
+     per-file walk (correct, but the slow path);
+   - the mirror run passes `--python-executable <venv python>`, because zmypy's own venv
+     discovery (pyvenv.cfg walk-up) fails inside the mirror and would resolve third-party
+     imports against the system Python (verified — see "Mirror mode").
    Verified against the real binary 2026-08-25 (see "Mirror mode" in
-   `zuban-verified-behavior.md`): symlinks/hard links are followed, imports resolve through
-   them, output stays CWD-relative, timing matches real-FS runs.
+   `zuban-verified-behavior.md`): symlinks/hard links/dir links are followed, imports
+   resolve through them, output stays CWD-relative, timing matches real-FS runs.
 3. **SDK mode for zuban** ("Use project SDK" radio): run the **venv's own `zmypy` script**
    (derived from the SDK interpreter path: `<venv>/bin/zmypy`, or
    `<venv>\Scripts\zmypy.exe` on Windows). `python -m zuban` is impossible — see verified facts.
